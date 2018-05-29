@@ -1,43 +1,16 @@
 import java.util.ArrayList;
 import java.util.Date;
 
-public class SomeWorker implements iWorker{
+abstract class SomeWorker {
 
+    int id;
     String firstName;
     String lastName;
     String patronymic;
     Date birthday;
     Date startWork;
     Manager manager;
+    String type;
 
-
-    @Override
-    public void delWorker(SomeWorker someWorker) {
-
-    }
-
-    @Override
-    public void addWorker(SomeWorker someWorker) {
-
-    }
-
-    @Override
-    public void changeTypeWorker(SomeWorker someWorker) {
-
-    }
-
-    @Override
-    public void changeManager(SomeWorker someWorker) {
-
-    }
-
-    @Override
-    public void sortByLastName(ArrayList arrayList) {
-
-    }
-
-    @Override
-    public void sortByDate(ArrayList arrayList) {
-
-    }
+    abstract void changeType(String type);
 }

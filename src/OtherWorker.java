@@ -10,4 +10,9 @@ public class OtherWorker extends SomeWorker {
         this.startWork = startWork;
         this.description = description;
     }
+
+    @Override
+    void changeType(String type) {
+
+    }
 }

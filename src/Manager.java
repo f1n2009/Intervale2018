@@ -11,4 +11,9 @@ class Manager extends SomeWorker {
         this.startWork = startWork;
         this.employees = employees;
     }
+
+    @Override
+    void changeType(String type) {
+
+    }
 }
