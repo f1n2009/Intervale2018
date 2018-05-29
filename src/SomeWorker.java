@@ -1,14 +1,15 @@
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class Main implements iWorker{
+public class SomeWorker implements iWorker{
 
-    public static void main(String[] args) {
-        List<SomeWorker> workers = new ArrayList<>();
-        //SomeWorker = new Worker("Василевский", "Павел", "Николаевич", 16165151561561561, 326165156156156156156);
-        System.out.println(new Date());
-    }
+    String firstName;
+    String lastName;
+    String patronymic;
+    Date birthday;
+    Date startWork;
+    Manager manager;
+
 
     @Override
     public void delWorker(SomeWorker someWorker) {
