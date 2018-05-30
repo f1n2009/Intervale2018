@@ -41,12 +41,12 @@ public class Main {
                 break;
 
             case "sortbylastname":
-                //sortByLastName((ArrayList) allWorkers);
+                allWorkers.sort(Employee.COMPARE_BY_LAST_NAME);
                 System.out.println("Список отсортирован по фамилиям!");
                 break;
 
             case "sortbydate":
-                //sortByDate((ArrayList) allWorkers);
+                allWorkers.sort(Employee.COMPARE_BY_START_WORK);
                 System.out.println("Список отсортирован по дате приема на работу!");
                 break;
 

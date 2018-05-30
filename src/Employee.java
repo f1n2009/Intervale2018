@@ -1,7 +1,8 @@
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
-abstract class Employee implements iWorker{
+abstract class Employee implements iWorker , Comparable<Employee>{
 
     private int id;
     private String firstName;
@@ -85,4 +86,12 @@ abstract class Employee implements iWorker{
     }
 
     abstract String getAllValues();
+
+    @Override
+    public int compareTo(Employee o) {
+        return this.getLastName().compareTo(o.getLastName());
+    }
+
+    static final Comparator<Employee> COMPARE_BY_LAST_NAME = Comparator.comparing(Employee::getLastName);
+    static final Comparator<Employee> COMPARE_BY_START_WORK = Comparator.comparing(Employee::getStartWork);
 }
