@@ -9,5 +9,6 @@ public interface iWorker {
     Date getBirthday();
     Date getStartWork();
     List <Integer>getWorkersId();
+    String getDescription();
     int getId();
 }

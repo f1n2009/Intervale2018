@@ -5,10 +5,10 @@ import java.util.*;
 
 public class Main {
 
-    private Map<Integer, Employee> allWorkers;
+    private List<Employee> allWorkers;
 
     private Main(String file) throws IOException {
-        allWorkers = new HashMap<>();
+        allWorkers = new ArrayList<>();
         this.readerWriter(file);
         BufferedReader inputName = new BufferedReader(new InputStreamReader(System.in));
 
@@ -40,6 +40,16 @@ public class Main {
                 System.out.println("Файл сохранен!");
                 break;
 
+            case "sortbylastname":
+                //sortByLastName((ArrayList) allWorkers);
+                System.out.println("Список отсортирован по фамилиям!");
+                break;
+
+            case "sortbydate":
+                //sortByDate((ArrayList) allWorkers);
+                System.out.println("Список отсортирован по дате приема на работу!");
+                break;
+
             case "exit":
                 command = "exit";
                 break;
@@ -66,38 +76,32 @@ public class Main {
     }
 
     private void delWorker(int id) {
-        allWorkers.remove(id);
+        for (int i = 0; i < allWorkers.size(); i++){
+            if (allWorkers.get(i).getId()==id)
+                allWorkers.remove(i);
+        }
 
     }
 
-    public void addWorker() {
-        this.readerWriter("new_employees.txt");
-    }
+    private void addWorker() {
+        this.readerWriter("new_employees.txt");}
 
-    public void changeTypeWorker(Employee someWorker) {
+    //public void changeTypeWorker(Employee someWorker) {}
 
-    }
+    //public void changeManager(Employee someWorker) {}
 
-    public void changeManager(Employee someWorker) {
+    //private void sortByLastName(ArrayList arrayList) {}
 
-    }
+    //private void sortByDate(ArrayList arrayList) {}
 
-    public void sortByLastName(ArrayList arrayList) {
-
-    }
-
-    public void sortByDate(ArrayList arrayList) {
-
-    }
-
-    public void save (){
+    private void save(){
         BufferedWriter writeFromFile = null;
         try {
             String newFile = "output.txt";
             writeFromFile = new BufferedWriter(new FileWriter(newFile));
-            for(Map.Entry<Integer, Employee> entry : allWorkers.entrySet()) {
+            for(Employee entry : allWorkers) {
                 try {
-                    writeFromFile.write(entry.getValue().getAllValues() + '\n');
+                    writeFromFile.write(entry.getAllValues() + '\n');
                 }
                 catch (ArithmeticException e){
                     writeFromFile.write(e.getMessage() + '\n');}
@@ -120,7 +124,7 @@ public class Main {
                 readFromFile = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = readFromFile.readLine()) != null) {
-                    allWorkers.put(parser(line).getId(), parser(line));
+                    allWorkers.add(parser(line));
                 }
             } catch (IOException | ParseException e) {
                 e.printStackTrace();
@@ -139,13 +143,13 @@ public class Main {
         StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
         Queue <String> word = new ArrayDeque<>();
         String curr;
-        String value = "";
+        StringBuilder value = new StringBuilder();
         while (tokenizer.hasMoreTokens()) {
 
                 curr = tokenizer.nextToken();
-                value+=curr;
-                word.add(value);
-                value="";
+                value.append(curr);
+                word.add(value.toString());
+                value = new StringBuilder();
 
         }
         int id = Integer.parseInt(word.poll());
@@ -155,19 +159,24 @@ public class Main {
         Date birthday = transformDate(word.poll());
         Date startWork = transformDate(word.poll());
         String type = word.poll();
-        if (type.equals("работник")){
-            int managerId = Integer.parseInt(word.poll());
-            newEmployee = new Worker(id, lastname, firstName, patronymic, birthday, startWork, managerId);}
-        else if (type.equals("менеджер")){
-            List <Integer> workersId = new ArrayList<>();
-            while (!word.isEmpty())
-                workersId.add(Integer.parseInt(word.poll()));
-            newEmployee = new Manager(id, lastname, firstName, patronymic, birthday, startWork, workersId);}
-        else if (type.equals("другой")){
-            String description = "";
-            while (!word.isEmpty())
-                description += word.poll();
-            newEmployee = new OtherWorker(id, lastname, firstName, patronymic, birthday, startWork, description);}
+        switch (type) {
+            case "работник":
+                int managerId = Integer.parseInt(word.poll());
+                newEmployee = new Worker(id, lastname, firstName, patronymic, birthday, startWork, managerId);
+                break;
+            case "менеджер":
+                List<Integer> workersId = new ArrayList<>();
+                while (!word.isEmpty())
+                    workersId.add(Integer.parseInt(word.poll()));
+                newEmployee = new Manager(id, lastname, firstName, patronymic, birthday, startWork, workersId);
+                break;
+            case "другой":
+                StringBuilder description = new StringBuilder();
+                while (!word.isEmpty())
+                    description.append(word.poll());
+                newEmployee = new OtherWorker(id, lastname, firstName, patronymic, birthday, startWork, description.toString());
+                break;
+        }
         return newEmployee;
     }
 

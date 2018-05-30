@@ -3,6 +3,8 @@ import java.util.List;
 
 public class OtherWorker extends Employee {
 
+    private String type = "другой";
+
     OtherWorker (int id, String lastName, String firstName, String patronymic, Date birthday, Date startWork, String description){
         super(id, lastName, firstName, patronymic, birthday, startWork, description);
     }
@@ -20,6 +22,6 @@ public class OtherWorker extends Employee {
     @Override
     String getAllValues() {
         return String.valueOf(this.getId())+" "+this.getLastName()+" "+this.getFirstName()+" "+this.getPatronymic()+
-                " "+this.getBirthday()+" "+this.getStartWork();
+                " "+this.getBirthday()+" "+this.getStartWork()+" "+type+" "+getDescription();
     }
 }

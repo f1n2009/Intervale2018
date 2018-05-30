@@ -79,5 +79,10 @@ abstract class Employee implements iWorker{
         return id;
     }
 
+    @Override
+    public String getDescription() {
+        return description;
+    }
+
     abstract String getAllValues();
 }
