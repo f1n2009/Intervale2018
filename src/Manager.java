@@ -1,19 +1,25 @@
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-class Manager extends SomeWorker {
-    private ArrayList<SomeWorker> employees;
-    Manager (String lastName, String firstName, String patronymic, Date birthday, Date startWork, ArrayList <SomeWorker> employees){
-        this.lastName = lastName;
-        this.firstName = firstName;
-        this.patronymic = patronymic;
-        this.birthday = birthday;
-        this.startWork = startWork;
-        this.employees = employees;
+class Manager extends Employee {
+    private List<Integer> workersId;
+    Manager(int id, String lastName, String firstName, String patronymic, Date birthday, Date startWork, List<Integer> workersId){
+        super(id, lastName, firstName, patronymic, birthday, startWork, workersId);
     }
 
     @Override
-    void changeType(String type) {
+    public List<Integer> getWorkersId() {
+        return super.workersId;
+    }
+
+    @Override
+    String getAllValues() {
+        return String.valueOf(this.getId())+" "+this.getLastName()+" "+this.getFirstName()+" "+this.getPatronymic()+
+                " "+this.getBirthday()+" "+this.getStartWork();
+    }
+
+    @Override
+    public void changeType(String type) {
 
     }
 }

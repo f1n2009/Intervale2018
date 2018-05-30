@@ -1,11 +1,13 @@
-import javax.xml.crypto.Data;
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public interface iWorker {
-    void delWorker(SomeWorker someWorker);
-    void addWorker(SomeWorker someWorker);
-    void changeTypeWorker(SomeWorker someWorker);
-    void changeManager(SomeWorker someWorker);
-    void sortByLastName(ArrayList arrayList);
-    void sortByDate(ArrayList arrayList);
+    void changeType(String type);
+    String getFirstName();
+    String getLastName();
+    String getPatronymic();
+    Date getBirthday();
+    Date getStartWork();
+    List <Integer>getWorkersId();
+    int getId();
 }

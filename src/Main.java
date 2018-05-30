@@ -3,61 +3,115 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Main implements iWorker{
+public class Main {
 
-    private static ArrayList<SomeWorker> workers;
+    private Map<Integer, Employee> allWorkers;
 
-    private Main(String file){
-        workers = new ArrayList<>();
+    private Main(String file) throws IOException {
+        allWorkers = new HashMap<>();
         this.readerWriter(file);
-    }
+        BufferedReader inputName = new BufferedReader(new InputStreamReader(System.in));
 
-    public static void main(String[] args) {
-        String birthday = "27.04.1989";
-        String startWork = "01.09.2018";
-        SomeWorker someWorker= null;
-        try {
-            someWorker = new Worker("Василевский", "Павел", "Николаевич",
-                    new SimpleDateFormat("dd.MM.yyyy").parse(birthday),
-                    new SimpleDateFormat("dd.MM.yyyy").parse(startWork));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        String command = "";
+        while (!command.equals("exit")){
+            try {
+                System.out.print("Введите команду:");
+                command = inputName.readLine();
+
+            } catch (IOException ex) {
+                System.out.println("Команда введена неверно!");
+            }
+        switch (command) {
+
+            case "del":
+                System.out.println("Введите id работника:");
+                int id = Integer.valueOf(inputName.readLine());
+                delWorker(id);
+                System.out.println("Работник с id = "+id+" удален!");
+                break;
+
+            case "add":
+                addWorker();
+                System.out.println("Работники добавлены!");
+                break;
+
+            case "save":
+                save();
+                System.out.println("Файл сохранен!");
+                break;
+
+            case "exit":
+                command = "exit";
+                break;
+
+                default:
+                    System.out.println("Команда введена не верно!");
+            }
         }
+    }
+
+    public static void main(String[] args) throws IOException {
+        System.out.println("Список команд:");
+        System.out.println("del - удаление работника");
+        System.out.println("add - добавление работников из файла");
+        System.out.println("changetype - изменение типа работника");
+        System.out.println("changemabager изменение менеджера работника");
+        System.out.println("sortbylastname - сортировка списка по фамилиям");
+        System.out.println("sortbydate - сортировка списка по дате принятия на работу");
+        System.out.println("save - сохранение списка в файл");
+        System.out.println("");
         new Main("input.txt");
-        System.out.println(workers.get(0).birthday);
-        System.out.println(workers.get(0).firstName);
-        System.out.println(workers.get(0).lastName);
-        System.out.println(workers.get(0).startWork);
-    }
 
-    @Override
-    public void delWorker(SomeWorker someWorker) {
 
     }
 
-    @Override
-    public void addWorker(SomeWorker someWorker) {
+    private void delWorker(int id) {
+        allWorkers.remove(id);
 
     }
 
-    @Override
-    public void changeTypeWorker(SomeWorker someWorker) {
+    public void addWorker() {
+        this.readerWriter("new_employees.txt");
+    }
+
+    public void changeTypeWorker(Employee someWorker) {
 
     }
 
-    @Override
-    public void changeManager(SomeWorker someWorker) {
+    public void changeManager(Employee someWorker) {
 
     }
 
-    @Override
     public void sortByLastName(ArrayList arrayList) {
 
     }
 
-    @Override
     public void sortByDate(ArrayList arrayList) {
 
+    }
+
+    public void save (){
+        BufferedWriter writeFromFile = null;
+        try {
+            String newFile = "output.txt";
+            writeFromFile = new BufferedWriter(new FileWriter(newFile));
+            for(Map.Entry<Integer, Employee> entry : allWorkers.entrySet()) {
+                try {
+                    writeFromFile.write(entry.getValue().getAllValues() + '\n');
+                }
+                catch (ArithmeticException e){
+                    writeFromFile.write(e.getMessage() + '\n');}
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (writeFromFile != null)
+                try {
+                    writeFromFile.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
     }
 
     private void readerWriter(String file) {
@@ -66,11 +120,9 @@ public class Main implements iWorker{
                 readFromFile = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = readFromFile.readLine()) != null) {
-                    workers.add(parser(line));
+                    allWorkers.put(parser(line).getId(), parser(line));
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ParseException e) {
+            } catch (IOException | ParseException e) {
                 e.printStackTrace();
             } finally {
                 if (readFromFile != null)
@@ -82,53 +134,44 @@ public class Main implements iWorker{
             }
     }
 
-    private SomeWorker parser (String line) throws ParseException {
-        StringTokenizer tokenizer = new StringTokenizer(line, " ", true);
+    private Employee parser (String line) throws ParseException {
+        Employee newEmployee = null;
+        StringTokenizer tokenizer = new StringTokenizer(line, " ", false);
         Queue <String> word = new ArrayDeque<>();
         String curr;
         String value = "";
         while (tokenizer.hasMoreTokens()) {
-            curr = tokenizer.nextToken();
-            value+=curr;
-            if (curr.equals(" ")) {
-                //System.out.println(value);
+
+                curr = tokenizer.nextToken();
+                value+=curr;
                 word.add(value);
                 value="";
-            }}
+
+        }
+        int id = Integer.parseInt(word.poll());
         String lastname = word.poll();
         String firstName = word.poll();
         String patronymic = word.poll();
         Date birthday = transformDate(word.poll());
-        Date startWork = transformDate("01.10.2018");
-
-        return new Worker(lastname, firstName, patronymic, birthday, startWork );
+        Date startWork = transformDate(word.poll());
+        String type = word.poll();
+        if (type.equals("работник")){
+            int managerId = Integer.parseInt(word.poll());
+            newEmployee = new Worker(id, lastname, firstName, patronymic, birthday, startWork, managerId);}
+        else if (type.equals("менеджер")){
+            List <Integer> workersId = new ArrayList<>();
+            while (!word.isEmpty())
+                workersId.add(Integer.parseInt(word.poll()));
+            newEmployee = new Manager(id, lastname, firstName, patronymic, birthday, startWork, workersId);}
+        else if (type.equals("другой")){
+            String description = "";
+            while (!word.isEmpty())
+                description += word.poll();
+            newEmployee = new OtherWorker(id, lastname, firstName, patronymic, birthday, startWork, description);}
+        return newEmployee;
     }
 
     private Date transformDate(String date) throws ParseException {
         return new SimpleDateFormat("dd.MM.yyyy").parse(date);
     }
-
-            /*BufferedWriter writeFromFile = null;
-            try {
-                String newFile = file.replace("in", "out");
-                writeFromFile = new BufferedWriter(new FileWriter(newFile));
-                for (String mas : mass) {
-                    List<String> expression = calculator.parse(mas);
-                    try {
-                        writeFromFile.write(mas + " = " + format(calculator.calc(expression)) + '\n');
-                    }
-                    catch (ArithmeticException e){
-                        writeFromFile.write(e.getMessage() + '\n');}
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (writeFromFile != null)
-                    try {
-                        writeFromFile.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-            }
-        }*/
-    }
+}
