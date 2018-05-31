@@ -3,14 +3,15 @@ import java.util.List;
 
 class Manager extends Employee {
 
-    private String type = "менеджер";
-    Manager(int id, String lastName, String firstName, String patronymic, Date birthday, Date startWork, List<Integer> workersId){
-        super(id, lastName, firstName, patronymic, birthday, startWork, workersId);
-    }
+    private final static String type = "менеджер";
 
-    @Override
-    public List<Integer> getWorkersId() {
-        return super.workersId;
+    private List<Integer> workersId;
+
+    Manager(){};
+
+    Manager(int id, String lastName, String firstName, String patronymic, Date birthday, Date startWork, List<Integer> workersId){
+        super(id, lastName, firstName, patronymic, birthday, startWork);
+        this.workersId = workersId;
     }
 
     @Override
@@ -19,14 +20,13 @@ class Manager extends Employee {
                 " "+this.getBirthday()+" "+this.getStartWork()+" "+type+" "+lineWorkersId();
     }
 
-    @Override
-    public void changeType(String type) {
-
-    }
-
     private String lineWorkersId (){
         StringBuilder lineWorkersId= new StringBuilder();
         for (Integer aWorkersId : workersId) lineWorkersId.append(String.valueOf(aWorkersId)).append(" ");
         return lineWorkersId.toString();
+    }
+
+    public List<Integer> getWorkersId() {
+        return workersId;
     }
 }

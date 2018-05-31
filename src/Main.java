@@ -9,7 +9,7 @@ public class Main {
 
     private Main(String file) throws IOException {
         allWorkers = new ArrayList<>();
-        this.readerWriter(file);
+        this.reader(file);
         BufferedReader inputName = new BufferedReader(new InputStreamReader(System.in));
 
         String command = "";
@@ -27,12 +27,45 @@ public class Main {
                 System.out.println("Введите id работника:");
                 int id = Integer.valueOf(inputName.readLine());
                 delWorker(id);
-                System.out.println("Работник с id = "+id+" удален!");
+                System.out.println("Сотрудник с id = "+id+" удален!");
                 break;
 
             case "add":
                 addWorker();
-                System.out.println("Работники добавлены!");
+                System.out.println("Сотрудники добавлены!");
+                break;
+
+            case "changetype":
+                System.out.println("Введите id сотрудника:");
+                id = Integer.valueOf(inputName.readLine());
+                System.out.println("Введите новый тип сотрудника:");
+                String type = inputName.readLine();
+                switch (type){
+                    case "работник":
+                        System.out.println("Введите ID менеджера:");
+                        int managerId = Integer.valueOf(inputName.readLine());
+                        changetype(id, managerId);
+                        break;
+                    case "менеджер":
+                        System.out.println("Введите ID работников через запятую:");
+                        String line = inputName.readLine();
+                        StringTokenizer tokenizer = new StringTokenizer(line, ",", false);
+                        List <Integer> workersId = new ArrayList<>();
+                        while (tokenizer.hasMoreTokens()) {
+                            int woreker = Integer.valueOf(tokenizer.nextToken());
+                            workersId.add(woreker);
+                        }
+                        changetype(id, workersId);
+                        break;
+                    case "другой":
+                        System.out.println("Введите ID менеджера:");
+                        String description = inputName.readLine();
+                        changetype(id, description);
+                        break;
+                    default:
+                        System.out.println("Тип сотрудника введен не верно!");
+                }
+                System.out.println("Работник с id = "+id+" теперь "+type+"!");
                 break;
 
             case "save":
@@ -65,7 +98,7 @@ public class Main {
         System.out.println("del - удаление работника");
         System.out.println("add - добавление работников из файла");
         System.out.println("changetype - изменение типа работника");
-        System.out.println("changemabager изменение менеджера работника");
+        System.out.println("changemanager изменение менеджера работника");
         System.out.println("sortbylastname - сортировка списка по фамилиям");
         System.out.println("sortbydate - сортировка списка по дате принятия на работу");
         System.out.println("save - сохранение списка в файл");
@@ -77,22 +110,49 @@ public class Main {
 
     private void delWorker(int id) {
         for (int i = 0; i < allWorkers.size(); i++){
-            if (allWorkers.get(i).getId()==id)
+            if (allWorkers.get(i).getId()==id){
                 allWorkers.remove(i);
+            break;}
         }
-
     }
 
     private void addWorker() {
-        this.readerWriter("new_employees.txt");}
+        this.reader("new_employees.txt");}
 
-    //public void changeTypeWorker(Employee someWorker) {}
+    private void changetype(int id, int managerId) {
+        for (int i = 0; i < allWorkers.size(); i++){
+            if (allWorkers.get(i).getId()==id) {
+                allWorkers.set(i, allWorkers.get(i).changetype(managerId));
+                if (allWorkers.get(i).getId()==managerId) {
+                    Manager manager;
+                    manager = (Manager) allWorkers.get(i);
+                    manager.getWorkersId().add(id);
+                    allWorkers.set(i, manager);
+                }
+            }
+        }
+    }
+
+    private void changetype(int id, List <Integer> workersId) {
+        for (int i = 0; i < allWorkers.size(); i++){
+            if (allWorkers.get(i).getId()==id) {
+                allWorkers.set(i, allWorkers.get(i).changetype(workersId));
+                break;
+            }
+        }
+    }
+
+    private void changetype(int id, String description) {
+        for (int i = 0; i < allWorkers.size(); i++){
+            if (allWorkers.get(i).getId()==id) {
+                allWorkers.set(i, allWorkers.get(i).changetype(description));
+                break;
+            }
+        }
+    }
+
 
     //public void changeManager(Employee someWorker) {}
-
-    //private void sortByLastName(ArrayList arrayList) {}
-
-    //private void sortByDate(ArrayList arrayList) {}
 
     private void save(){
         BufferedWriter writeFromFile = null;
@@ -118,7 +178,7 @@ public class Main {
         }
     }
 
-    private void readerWriter(String file) {
+    private void reader(String file) {
             BufferedReader readFromFile = null;
             try {
                 readFromFile = new BufferedReader(new FileReader(file));

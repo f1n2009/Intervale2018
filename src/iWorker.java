@@ -1,14 +1,8 @@
-import java.util.Date;
 import java.util.List;
 
-public interface iWorker {
-    void changeType(String type);
-    String getFirstName();
-    String getLastName();
-    String getPatronymic();
-    Date getBirthday();
-    Date getStartWork();
-    List <Integer>getWorkersId();
-    String getDescription();
-    int getId();
+interface iWorker {
+
+    public Employee changetype(int managerId);
+    public Employee changetype(List<Integer>workersId);
+    public Employee changetype(String description);
 }

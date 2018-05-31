@@ -1,29 +1,17 @@
 import java.util.Date;
-import java.util.List;
 
-class Worker extends Employee {
+class Worker extends Employee{
 
-    private String type = "работник";
+    private final static String type = "работник";
+    private int managerId;
 
     Worker (int id, String lastName, String firstName, String patronymic, Date birthday, Date startWork, int managerId){
-        super(id, lastName, firstName, patronymic, birthday, startWork, managerId);
-    }
-
-    @Override
-    public void changeType(String type) {
-        switch (type){
-            case ("manager"):
-                type = "manager";
-        }
+        super(id, lastName, firstName, patronymic, birthday, startWork);
+        this.managerId = managerId;
     }
 
     private int getManagerId() {
         return managerId;
-    }
-
-    @Override
-    public List<Integer> getWorkersId() {
-        return null;
     }
 
     @Override
