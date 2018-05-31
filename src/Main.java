@@ -90,6 +90,10 @@ public class Main {
                 System.out.println("Список отсортирован по дате приема на работу!");
                 break;
 
+            case "base":
+                new UseDataBase();
+                break;
+
             case "exit":
                 command = "exit";
                 break;
@@ -110,6 +114,7 @@ public class Main {
         System.out.println("sortbydate - сортировка списка по дате принятия на работу");
         System.out.println("save - сохранение списка в файл");
         System.out.println("exit - выход из программы");
+        System.out.println("base - работа с базой данных");
         System.out.println("");
         new Main("input.txt");}
 
