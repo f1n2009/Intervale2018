@@ -14,15 +14,10 @@ public class Main {
 
         String command = "";
         while (!command.equals("exit")){
-            try {
                 System.out.print("Введите команду:");
                 command = inputName.readLine();
 
-            } catch (IOException ex) {
-                System.out.println("Команда введена неверно!");
-            }
         switch (command) {
-
             case "del":
                 System.out.println("Введите id работника:");
                 int id = Integer.valueOf(inputName.readLine());
@@ -40,6 +35,12 @@ public class Main {
                 id = Integer.valueOf(inputName.readLine());
                 System.out.println("Введите новый тип сотрудника:");
                 String type = inputName.readLine();
+
+                String[] employes = {"работник", "менеджер", "другой"};
+                while (!Arrays.asList(employes).contains(type)){
+                    System.out.println("Тип сотрудника введен неверно!");
+                    type = inputName.readLine();}
+
                 switch (type){
                     case "работник":
                         System.out.println("Введите ID менеджера:");
@@ -58,19 +59,25 @@ public class Main {
                         changetype(id, workersId);
                         break;
                     case "другой":
-                        System.out.println("Введите ID менеджера:");
+                        System.out.println("Введите описание сотрудника:");
                         String description = inputName.readLine();
                         changetype(id, description);
-                        break;
-                    default:
-                        System.out.println("Тип сотрудника введен не верно!");
-                }
+                        break; }
                 System.out.println("Работник с id = "+id+" теперь "+type+"!");
                 break;
 
             case "save":
                 save();
                 System.out.println("Файл сохранен!");
+                break;
+
+            case "changemanager":
+                System.out.println("Введите id работника:");
+                id = Integer.valueOf(inputName.readLine());
+                System.out.println("Введите id менеджера:");
+                int managerId = Integer.valueOf(inputName.readLine());
+                changeManager(id, managerId);
+                System.out.println("Менеджер изменен!");
                 break;
 
             case "sortbylastname":
@@ -95,18 +102,16 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
         System.out.println("Список команд:");
-        System.out.println("del - удаление работника");
-        System.out.println("add - добавление работников из файла");
-        System.out.println("changetype - изменение типа работника");
-        System.out.println("changemanager изменение менеджера работника");
+        System.out.println("del - удаление сотрудника");
+        System.out.println("add - добавление сотрудников из файла");
+        System.out.println("changetype - изменение типа сотрудника");
+        System.out.println("changemanager - изменение менеджера работника");
         System.out.println("sortbylastname - сортировка списка по фамилиям");
         System.out.println("sortbydate - сортировка списка по дате принятия на работу");
         System.out.println("save - сохранение списка в файл");
+        System.out.println("exit - выход из программы");
         System.out.println("");
-        new Main("input.txt");
-
-
-    }
+        new Main("input.txt");}
 
     private void delWorker(int id) {
         for (int i = 0; i < allWorkers.size(); i++){
@@ -122,14 +127,12 @@ public class Main {
     private void changetype(int id, int managerId) {
         for (int i = 0; i < allWorkers.size(); i++){
             if (allWorkers.get(i).getId()==id) {
-                allWorkers.set(i, allWorkers.get(i).changetype(managerId));
-                if (allWorkers.get(i).getId()==managerId) {
-                    Manager manager;
-                    manager = (Manager) allWorkers.get(i);
-                    manager.getWorkersId().add(id);
-                    allWorkers.set(i, manager);
+                allWorkers.set(i, allWorkers.get(i).changetype(managerId));}
+            if (allWorkers.get(i).getId()==managerId) {
+                if (allWorkers.get(i) instanceof Manager){
+                    ((Manager) allWorkers.get(i)).getWorkersId().add(id);
+                    }
                 }
-            }
         }
     }
 
@@ -151,8 +154,24 @@ public class Main {
         }
     }
 
-
-    //public void changeManager(Employee someWorker) {}
+    private void changeManager(int id, int managerId) {
+        for (Employee allWorker : allWorkers) {
+            if (allWorker.getId() == id) {
+                if (allWorker instanceof Worker) {
+                    ((Worker) allWorker).setManagerId(managerId);
+                } else {
+                    System.out.println("Id работника введен неверно!");
+                }
+            }
+            if (allWorker.getId() == managerId) {
+                if (allWorker instanceof Manager) {
+                    ((Manager) allWorker).getWorkersId().add(id);
+                } else {
+                    System.out.println("Id менеджера введен неверно!");
+                }
+            }
+        }
+    }
 
     private void save(){
         BufferedWriter writeFromFile = null;

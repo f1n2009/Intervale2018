@@ -26,7 +26,7 @@ class Manager extends Employee {
         return lineWorkersId.toString();
     }
 
-    public List<Integer> getWorkersId() {
+    List<Integer> getWorkersId() {
         return workersId;
     }
 }

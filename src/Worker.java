@@ -3,6 +3,7 @@ import java.util.Date;
 class Worker extends Employee{
 
     private final static String type = "работник";
+
     private int managerId;
 
     Worker (int id, String lastName, String firstName, String patronymic, Date birthday, Date startWork, int managerId){
@@ -12,6 +13,10 @@ class Worker extends Employee{
 
     private int getManagerId() {
         return managerId;
+    }
+
+    public void setManagerId(int managerId) {
+        this.managerId = managerId;
     }
 
     @Override
