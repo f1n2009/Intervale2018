@@ -6,6 +6,8 @@ import java.util.*;
 public class Main {
 
     private List<Employee> allWorkers;
+    private boolean isBaseWorking;
+    private UseDataBase db;
 
     private Main(String file) throws IOException {
         allWorkers = new ArrayList<>();
@@ -21,21 +23,26 @@ public class Main {
             case "del":
                 System.out.println("Введите id работника:");
                 int id = Integer.valueOf(inputName.readLine());
+                if (isBaseWorking)
+                    db.delWorkerFromBase(id);
                 delWorker(id);
                 System.out.println("Сотрудник с id = "+id+" удален!");
                 break;
 
             case "add":
+                if (isBaseWorking){
+                    System.out.println("Не реализовано для БД!"); break;}
                 addWorker();
                 System.out.println("Сотрудники добавлены!");
                 break;
 
             case "changetype":
+                if (isBaseWorking){
+                    System.out.println("Не реализовано для БД!"); break;}
                 System.out.println("Введите id сотрудника:");
                 id = Integer.valueOf(inputName.readLine());
                 System.out.println("Введите новый тип сотрудника:");
                 String type = inputName.readLine();
-
                 String[] employes = {"работник", "менеджер", "другой"};
                 while (!Arrays.asList(employes).contains(type)){
                     System.out.println("Тип сотрудника введен неверно!");
@@ -72,6 +79,8 @@ public class Main {
                 break;
 
             case "changemanager":
+                if (isBaseWorking){
+                    System.out.println("Не реализовано для БД!"); break;}
                 System.out.println("Введите id работника:");
                 id = Integer.valueOf(inputName.readLine());
                 System.out.println("Введите id менеджера:");
@@ -81,17 +90,26 @@ public class Main {
                 break;
 
             case "sortbylastname":
+                if (isBaseWorking)
+                    db.sortDataBaseByLastName();
                 allWorkers.sort(Employee.COMPARE_BY_LAST_NAME);
                 System.out.println("Список отсортирован по фамилиям!");
                 break;
 
             case "sortbydate":
+                if (isBaseWorking)
+                    db.sortDataBaseByDate();
                 allWorkers.sort(Employee.COMPARE_BY_START_WORK);
                 System.out.println("Список отсортирован по дате приема на работу!");
                 break;
 
             case "base":
-                UseDataBase db = new UseDataBase(allWorkers);
+                if (isBaseWorking){
+                    System.out.println("Вы уже работаете с базой!");
+                    break;
+                }
+                db = new UseDataBase(allWorkers);
+                isBaseWorking = true;
                 break;
 
             case "exit":
@@ -179,6 +197,8 @@ public class Main {
     }
 
     private void save(){
+        if(isBaseWorking)
+            allWorkers = db.saveFromBase();
         BufferedWriter writeFromFile = null;
         try {
             String newFile = "output.txt";
