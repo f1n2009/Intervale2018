@@ -8,6 +8,7 @@ abstract class Employee implements Comparable<Employee>, iWorker {
     private String firstName;
     private String lastName;
     private String patronymic;
+    private String type;
     private Date birthday;
     private Date startWork;
 
@@ -18,9 +19,6 @@ abstract class Employee implements Comparable<Employee>, iWorker {
         this.patronymic = patronymic;
         this.birthday = birthday;
         this.startWork = startWork;
-    }
-
-    Employee() {
     }
 
     String getFirstName() {
@@ -35,6 +33,8 @@ abstract class Employee implements Comparable<Employee>, iWorker {
         return this.patronymic;
     }
 
+    String getType() { return this.type;}
+
     Date getBirthday() {
         return this.birthday;
     }
@@ -45,6 +45,10 @@ abstract class Employee implements Comparable<Employee>, iWorker {
 
     int getId() {
         return id;
+    }
+
+    void setType(String type) {
+        this.type = type;
     }
 
     abstract String getAllValues();

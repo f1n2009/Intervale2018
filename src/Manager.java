@@ -3,15 +3,14 @@ import java.util.List;
 
 class Manager extends Employee {
 
-    private final static String type = "менеджер";
+    private final String type = "менеджер";
 
     private List<Integer> workersId;
-
-    Manager(){};
 
     Manager(int id, String lastName, String firstName, String patronymic, Date birthday, Date startWork, List<Integer> workersId){
         super(id, lastName, firstName, patronymic, birthday, startWork);
         this.workersId = workersId;
+        super.setType(this.type);
     }
 
     @Override

@@ -91,7 +91,7 @@ public class Main {
                 break;
 
             case "base":
-                new UseDataBase();
+                UseDataBase db = new UseDataBase(allWorkers);
                 break;
 
             case "exit":
