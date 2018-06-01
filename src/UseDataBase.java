@@ -16,7 +16,7 @@ class UseDataBase {
     UseDataBase(List <Employee> list){
 
         try {
-            // opening database connection to MySQL server
+            // opening database connection to SQL server
             Class.forName("com.mysql.jdbc.Driver");
             con = DriverManager.getConnection(url, user, password);
 
